@@ -1,0 +1,141 @@
+/*
+ * SPDX-License-Identifier: Apache-2.0 AND MIT
+ *
+ * libqudo-pqc.so — ELF symbol visibility map (explicit allow-list)
+ *
+ * Only the public API is exported. The algorithm-family prefixes
+ * (QUDO_KEM_*, QUDO_MLDSA_*, QUDO_SLHDSA_*) are exported by wildcard;
+ * other public entry points are listed explicitly. Everything else is
+ * hidden by `local: *;`.
+ */
+
+LIBQUDOPQC_1.0 {
+    global:
+        /* ------------------------------------------------------------ */
+        /*  Algorithm public APIs                                       */
+        /* ------------------------------------------------------------ */
+        QUDO_KEM_*;
+        QUDO_MLDSA_*;
+        QUDO_SLHDSA_*;
+
+        /* ------------------------------------------------------------ */
+        /*  Module lifecycle and state machine                          */
+        /* ------------------------------------------------------------ */
+        qudo_pqc_init;
+        qudo_pqc_fini;
+        qudo_pqc_unregister_callbacks;
+        qudo_pqc_get_state;
+        qudo_pqc_is_running;
+        qudo_pqc_is_running_or_selftest;
+        qudo_pqc_is_self_testing;
+        qudo_pqc_is_fips;
+        qudo_pqc_self_test;
+        qudo_pqc_run_post;
+        qudo_pqc_version;
+
+        /* Module integrity verification */
+        qudo_pqc_verify_integrity;
+        qudo_pqc_verify_integrity_embedded;
+        qudo_pqc_get_module_boundary;
+        qudo_pqc_get_integrity_hmac;
+        qudo_pqc_integrity_hmac_is_patched;
+
+        /* POST status introspection */
+        qudo_pqc_post_drbg_kat_passed;
+        qudo_pqc_post_integrity_passed;
+        qudo_pqc_get_cast_status;
+        qudo_pqc_set_cast_status;
+        qudo_pqc_run_all_casts;
+
+        /* FIPS indicator + approval query */
+        qudo_pqc_is_fips_approved;
+        qudo_pqc_get_security_level;
+        qudo_pqc_set_min_security_level;
+        qudo_pqc_get_min_security_level;
+        qudo_pqc_check_security_level;
+        qudo_fips_ind_get_default_strict;
+        qudo_fips_ind_check_operation;
+
+        qudo_pqc_set_error_state;
+
+        /* ------------------------------------------------------------ */
+        /*  Pairwise Consistency Tests                                  */
+        /* ------------------------------------------------------------ */
+        qudo_pqc_mlkem_pct;
+        qudo_pqc_mldsa_pct;
+        qudo_pqc_slhdsa_pct;
+
+        /* ------------------------------------------------------------ */
+        /*  Approved DRBG (SP 800-90A CTR_DRBG) — module-global instance*/
+        /* ------------------------------------------------------------ */
+        qudo_pqc_rand_bytes;
+        qudo_pqc_rand_init;
+        qudo_pqc_rand_reseed;
+        qudo_pqc_rand_is_ready;
+        qudo_pqc_rand_cleanup;
+        qudo_pqc_rand_seed_from_platform;
+
+        /* Host-DRBG hook: routes qudo_fips_rand_bytes() to a host DRBG. */
+        qudo_pqc_set_rand_provider;
+
+        /* ------------------------------------------------------------ */
+        /*  Non-Approved user-instantiable CTR-DRBG: per-call indicator  */
+        /*  marks these as non-Approved inside each entry point.        */
+        /* ------------------------------------------------------------ */
+        qudo_pqc_ctrdrbg_new;
+        qudo_pqc_ctrdrbg_init;
+        qudo_pqc_ctrdrbg_generate;
+        qudo_pqc_ctrdrbg_reseed;
+        qudo_pqc_ctrdrbg_uninit;
+        qudo_pqc_ctrdrbg_free;
+        qudo_pqc_ctrdrbg_is_zeroized;
+
+        /* ------------------------------------------------------------ */
+        /*  HMAC-SHA-256 public API                                     */
+        /* ------------------------------------------------------------ */
+        qudo_pqc_hmac_sha256;
+        qudo_pqc_hmac_ctx_new;
+        qudo_pqc_hmac_ctx_init;
+        qudo_pqc_hmac_ctx_update;
+        qudo_pqc_hmac_ctx_final;
+        qudo_pqc_hmac_ctx_free;
+
+        /* ------------------------------------------------------------ */
+        /*  Zeroization                                                 */
+        /* ------------------------------------------------------------ */
+        qudo_pqc_cleanse;
+        qudo_cleanse;
+
+        /* ------------------------------------------------------------ */
+        /*  Audit / error-string public API                             */
+        /* ------------------------------------------------------------ */
+        qudo_audit_log;
+        qudo_audit_set_callback;
+        qudo_err_string;
+
+        /* ------------------------------------------------------------ */
+        /*  Integrity HMAC patching anchors (referenced by the external */
+        /*  qudo_fipsinstall tool to locate and write the HMAC section) */
+        /* ------------------------------------------------------------ */
+        qudo_fips_module_start;
+        qudo_fips_module_end;
+        qudo_fips_integrity_hmac;
+
+    local:
+        /*
+         * Everything else, including:
+         *   - qudo_fips_hmac_*, qudo_fips_hmac_sha256, qudo_fips_aes_*
+         *   - qudo_fips_rand_init/_bytes/_reseed/_cleanup/_is_ready/
+         *     _seed_from_platform (internal approved-DRBG back-end;
+         *     public wrappers are qudo_pqc_rand_*)
+         *   - qudo_ctrdrbg_init/_generate/_reseed/_free (low-level;
+         *     qudo_pqc_ctrdrbg_* is the public wrapper)
+         *   - qudo_malloc / qudo_zalloc / qudo_free / qudo_memcmp_ct
+         *   - qudo_once, qudo_rwlock_*
+         *   - qudo_kem_set_error_internal, qudo_mldsa_set_error_internal,
+         *     qudo_slhdsa_set_error_internal
+         *   - slh_dsa_sha2_*, slh_dsa_shake_* parameter tables
+         *   - all sub-library .o-internal symbols
+         */
+        *;
+};

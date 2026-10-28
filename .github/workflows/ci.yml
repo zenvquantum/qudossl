@@ -1,0 +1,263 @@
+name: CI
+
+# Full build + test matrix across the four supported platforms: Linux x86_64,
+# Linux aarch64, macOS arm64, Windows x64.
+#
+# These jobs build OpenSSL from scratch on four platforms and build it twice more
+# for the reproducibility check, so they are heavy (and billed). They run only on
+# pull requests into the integration branches (dev, main) -- so opening a PR into
+# dev triggers the full matrix -- and never on a bare push. They can still be run
+# manually (workflow_dispatch):
+#
+#     gh workflow run CI --ref <branch>
+on:
+  pull_request:
+    branches: [dev, main]
+  workflow_dispatch:
+
+env:
+  SOURCE_DATE_EPOCH: "1752451200"
+
+jobs:
+  linux-fips:
+    name: linux-${{ matrix.arch }}-fips
+    runs-on: ${{ matrix.runner }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - arch: x86_64
+            runner: ubuntu-24.04
+          - arch: aarch64
+            runner: ubuntu-24.04-arm
+    steps:
+      - uses: actions/checkout@v4
+      - name: Cache qudo-pqc-lib build
+        uses: actions/cache@v4
+        with:
+          path: qudo-pqc-lib/build
+          key: qudo-pqc-${{ runner.os }}-${{ runner.arch }}-${{ hashFiles('qudo-pqc-lib/**/*.c', 'qudo-pqc-lib/**/*.h', 'qudo-pqc-lib/CMakeLists.txt', 'build/build_libqudo_pqc.sh') }}
+      - name: Install build dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y build-essential cmake perl
+      - name: Build (stage 1 + stage 2)
+        run: make -C build all FIPS=yes
+      - name: Verify artifacts
+        run: |
+          test -f openssl/libcrypto.so
+          test -f openssl/libssl.so
+          test -f openssl/providers/fips.so
+          test -f qudo-pqc-lib/build/lib/libqudo-pqc.a
+      - name: Delegation is linked
+        run: ci/check-delegation-linked.sh openssl
+      - name: OpenSSL test suite
+        run: make -C build test
+
+  linux-default:
+    name: linux-x86_64-default
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install build dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y build-essential cmake perl
+      - name: Build without FIPS
+        run: make -C build all FIPS=no
+      - name: Delegation is linked
+        # FIPS=no still delegates; the script checks libcrypto instead of fips.so.
+        run: ci/check-delegation-linked.sh openssl
+      - name: OpenSSL test suite
+        run: make -C build test
+
+  qudo-pqc-standalone:
+    name: qudo-pqc-lib standalone tests
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install build dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y build-essential cmake
+      - name: Build and test qudo-pqc-lib (full standalone build)
+        run: make -C build test-pqc
+
+  upstream-parity:
+    name: upstream-parity
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - name: Qudo edits under openssl/ are confined to the delegation seam
+        run: |
+          set -euo pipefail
+          # openssl/ may differ from upstream openssl-3.5.7 only in the
+          # delegation seam; any other difference fails this job.
+          git remote add openssl-upstream https://github.com/openssl/openssl.git
+          git fetch --depth=1 --no-tags openssl-upstream \
+            refs/tags/openssl-3.5.7:refs/tags/openssl-3.5.7
+          # The subtree holds upstream's release export of the tag: git archive
+          # omits submodules and every export-ignore path (.github/, dotfiles,
+          # dev/, util/mktar.sh). Compare against that view, not the full tag.
+          mkdir -p /tmp/upstream
+          git archive refs/tags/openssl-3.5.7 | tar -x -C /tmp/upstream
+          (cd /tmp/upstream && find . -type f | sed 's#^\./##' | sort) > /tmp/up.lst
+          git ls-files openssl | sed 's#^openssl/##' | sort > /tmp/ours.lst
+          {
+            comm -23 /tmp/up.lst /tmp/ours.lst | sed 's/^/D  /'
+            comm -13 /tmp/up.lst /tmp/ours.lst | sed 's/^/A  /'
+            comm -12 /tmp/up.lst /tmp/ours.lst | while read -r f; do
+              cmp -s "/tmp/upstream/$f" "openssl/$f" || echo "M  $f"
+            done
+          } > /tmp/delta.txt
+          echo "files changed vs upstream openssl-3.5.7 (release export):"
+          sed 's/^/  /' /tmp/delta.txt
+          # Permitted: edits to the ML-KEM / ML-DSA delegation seam, Configure,
+          # the version string, and the four provider name strings. Nothing may
+          # be added or removed. crypto/slh_dsa/ is deliberately NOT permitted --
+          # SLH-DSA stays upstream, so any change there is unintended.
+          grep -vE '^M  (crypto/(ml_kem|ml_dsa)/|include/crypto/ml_dsa\.h$|Configure$|VERSION\.dat$|providers/(base|deflt|legacy|null)prov\.c$)' \
+            /tmp/delta.txt > /tmp/unexpected.txt || true
+          if [ -s /tmp/unexpected.txt ]; then
+            echo "::error::unexpected divergence from upstream outside the delegation seam"
+            sed 's/^/  /' /tmp/unexpected.txt
+            exit 1
+          fi
+          echo "OK - all divergence is inside the delegation seam."
+
+  macos-fips:
+    name: macos-arm64-fips
+    runs-on: macos-14
+    steps:
+      - uses: actions/checkout@v4
+      - name: Cache qudo-pqc-lib build
+        uses: actions/cache@v4
+        with:
+          path: qudo-pqc-lib/build
+          key: qudo-pqc-${{ runner.os }}-${{ runner.arch }}-${{ hashFiles('qudo-pqc-lib/**/*.c', 'qudo-pqc-lib/**/*.h', 'qudo-pqc-lib/CMakeLists.txt', 'build/build_libqudo_pqc.sh') }}
+      - name: Install build dependencies
+        run: brew install cmake
+      - name: Build (stage 1 + stage 2)
+        run: make -C build all FIPS=yes
+      - name: Verify artifacts
+        run: |
+          test -f openssl/libcrypto.dylib
+          test -f openssl/libssl.dylib
+          test -f openssl/providers/fips.dylib
+          test -f qudo-pqc-lib/build/lib/libqudo-pqc.a
+      - name: Delegation is linked
+        run: ci/check-delegation-linked.sh openssl
+      - name: OpenSSL test suite
+        run: make -C build test
+
+  reproducible-build:
+    name: reproducible-build (${{ matrix.os }})
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-24.04, ubuntu-24.04-arm, macos-14]
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install build dependencies (Linux)
+        if: runner.os == 'Linux'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y build-essential cmake perl
+      - name: Install build dependencies (macOS)
+        if: runner.os == 'macOS'
+        run: brew install cmake
+      - name: Two clean builds, byte-compare
+        run: ./reproducible-build/verify-reproducible.sh
+
+  boundary-gates:
+    name: boundary-gates
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install build dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y build-essential cmake
+      - name: Build qudo-pqc archive
+        run: make -C build qudo-pqc
+      - name: ML-KEM constructible without qudo_pqc_init
+        run: ./ci/check-mlkem-constructible.sh
+      - name: No FIPS scaffolding reachable from the math
+        run: ./ci/check-boundary-symbols.sh
+      # Non-seeded qudo entry points would bypass the OpenSSL DRBG.
+      - name: Delegation uses seeded entry points only
+        run: ./ci/check-seeded-entrypoints.sh
+
+  abi-compat:
+    name: abi-compat
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install build dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y build-essential cmake perl abigail-tools
+      - name: Build
+        run: make -C build all
+      - name: Public symbol delta vs upstream libcrypto
+        run: |
+          set -euo pipefail
+          # Capture the exported surface and compare against the committed
+          # baseline. The delegation edits under openssl/ are internal, so
+          # libcrypto's public symbols must match upstream exactly.
+          nm -D --defined-only openssl/libcrypto.so | awk '{print $3}' | sort > /tmp/libcrypto.syms
+          echo "exported symbols: $(wc -l < /tmp/libcrypto.syms)"
+          if [ -f ci/baselines/libcrypto.syms ]; then
+            if ! diff -u ci/baselines/libcrypto.syms /tmp/libcrypto.syms > /tmp/syms.diff; then
+              echo "::error::libcrypto.so public symbol set changed"
+              cat /tmp/syms.diff
+              exit 1
+            fi
+            echo "public symbol set unchanged vs baseline."
+          else
+            echo "::notice::ci/baselines/libcrypto.syms not found; check skipped"
+          fi
+      - uses: actions/upload-artifact@v4
+        with:
+          name: libcrypto-symbols
+          path: /tmp/libcrypto.syms
+
+  windows-fips:
+    name: windows-x64-fips
+    runs-on: windows-2022
+    defaults:
+      run:
+        shell: pwsh
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Strawberry Perl
+        uses: shogo82148/actions-setup-perl@v1
+        with:
+          perl-version: '5.38'
+          distribution: strawberry
+      - name: Set up NASM
+        uses: ilammy/setup-nasm@v1
+      - name: Set up MSVC environment
+        uses: ilammy/msvc-dev-cmd@v1
+        with:
+          arch: x64
+      - name: Build (stage 1 + stage 2)
+        run: .\build\build.ps1 -Target all
+      - name: Verify artifacts
+        run: |
+          if (-not (Test-Path openssl\libcrypto-3-x64.dll)) { throw 'libcrypto DLL missing' }
+          if (-not (Test-Path openssl\libssl-3-x64.dll))    { throw 'libssl DLL missing' }
+          if (-not (Test-Path openssl\providers\fips.dll))  { throw 'fips.dll missing' }
+      - name: Delegation is linked
+        # QUDO_* symbols are not exported from MSVC DLLs, so check the
+        # Configure-time delegation macro instead of the symbol table.
+        run: |
+          if (-not (Test-Path openssl\configdata.pm)) { throw 'openssl\configdata.pm missing - tree not configured' }
+          if (-not (Select-String -Path openssl\configdata.pm -Pattern 'QUDO_PQC_DELEGATE' -Quiet)) {
+              throw 'configdata.pm does not define QUDO_PQC_DELEGATE - Configure ran without --with-qudo-pqc-archive/--with-qudo-pqc-include, so this build is upstream OpenSSL, not QudoSSL.'
+          }
+          Write-Host 'configdata.pm defines QUDO_PQC_DELEGATE'
+      - name: OpenSSL test suite
+        run: nmake test
+        working-directory: openssl

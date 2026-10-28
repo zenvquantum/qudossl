@@ -1,0 +1,11 @@
+prefix=@CMAKE_INSTALL_PREFIX@
+exec_prefix=${prefix}
+libdir=${prefix}/@CMAKE_INSTALL_LIBDIR@
+includedir=${prefix}/@CMAKE_INSTALL_INCLUDEDIR@
+
+Name: qudo-mlkem
+Description: QUDO ML-KEM Post-Quantum Key Encapsulation Library (FIPS 203)
+Version: @PROJECT_VERSION@
+Libs: -L${libdir} -lqudo-mlkem
+Cflags: -I${includedir}/qudo-mlkem
+Requires: libcrypto

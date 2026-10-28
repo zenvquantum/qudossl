@@ -1,0 +1,84 @@
+# Auto-detect text files and normalize line endings to LF
+* text=auto
+
+# Source code
+*.c text
+*.h text
+*.cpp text
+*.hpp text
+*.cc text
+*.cxx text
+*.s text
+*.S text
+
+# Scripts - enforce Unix line endings (LF)
+*.sh text eol=lf
+*.bash text eol=lf
+*.py text eol=lf
+*.pl text eol=lf
+
+# Configuration files
+*.yml text
+*.yaml text
+*.json text
+*.xml text
+*.toml text
+*.ini text
+*.cnf text
+*.conf text
+
+# CMake
+CMakeLists.txt text
+*.cmake text
+*.cmake.in text
+
+# Documentation
+*.md text
+*.txt text
+*.rst text
+*.adoc text
+
+# Data files
+*.csv text
+*.tsv text
+
+# Windows-specific files - enforce Windows line endings (CRLF)
+*.bat text eol=crlf
+*.cmd text eol=crlf
+*.ps1 text eol=crlf
+
+# Binary files - never modify
+*.so binary
+*.a binary
+*.o binary
+*.obj binary
+*.dylib binary
+*.dll binary
+*.exe binary
+*.lib binary
+*.exp binary
+*.rsp binary
+
+# Certificates and keys
+*.pem binary
+*.der binary
+*.crt binary
+*.key binary
+*.p12 binary
+*.pfx binary
+
+# Archives
+*.zip binary
+*.tar binary
+*.gz binary
+*.tgz binary
+*.bz2 binary
+*.xz binary
+
+# Images
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.ico binary
+*.svg binary

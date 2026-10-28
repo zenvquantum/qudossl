@@ -1,0 +1,11 @@
+prefix=@CMAKE_INSTALL_PREFIX@
+exec_prefix=${prefix}
+libdir=${prefix}/@CMAKE_INSTALL_LIBDIR@
+includedir=${prefix}/@CMAKE_INSTALL_INCLUDEDIR@
+
+Name: qudo-slhdsa
+Description: QUDO SLH-DSA Stateless Hash-Based Digital Signature Library (FIPS 205)
+Version: @PROJECT_VERSION@
+Libs: -L${libdir} -lqudo-slhdsa
+Cflags: -I${includedir}/qudo-slhdsa
+Requires: libcrypto

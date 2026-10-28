@@ -1,0 +1,19 @@
+# Vendored trees. Marking them generated collapses them by default in
+# GitHub diffs and excludes them from language statistics.
+openssl/**          linguist-generated=true
+openssl/**          linguist-vendored=true
+qudo-pqc-lib/**     linguist-generated=true
+qudo-pqc-lib/**     linguist-vendored=true
+
+# Line endings for the Windows build path.
+*.ps1  text eol=crlf
+*.sh   text eol=lf
+
+# Binary test fixtures are not line-ending converted; CRLF conversion on
+# Windows checkouts changes their digests and breaks test_dgst. Upstream's own
+# .gitattributes is not part of the vendored tree.
+*.bin  binary
+*.der  binary
+*.pfx  binary
+*.dat  binary
+openssl/fuzz/corpora/**  binary

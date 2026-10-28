@@ -1,0 +1,67 @@
+QudoSSL
+Copyright (c) 2024-2026 ZenV Quantum
+
+This product bundles third-party components under permissive licenses
+(Apache-2.0, ISC and MIT). Their copyright and license notices are retained
+below as required. The complete, authoritative notices are the LICENSE files
+and the per-file SPDX / copyright headers within each component's directory;
+this file aggregates the principal attributions.
+
+================================================================================
+OpenSSL
+--------------------------------------------------------------------------------
+  Copyright (c) 1998-2026 The OpenSSL Project Authors
+  Copyright (c) 1995-1998 Eric A. Young, Tim J. Hudson
+  All rights reserved.
+  Licensed under the Apache License, Version 2.0.
+  Source: https://github.com/openssl/openssl (tag openssl-3.5.7)
+  License text: openssl/LICENSE.txt
+
+================================================================================
+qudo-pqc-lib
+--------------------------------------------------------------------------------
+  Copyright (c) 2024-2026 ZenV Quantum
+  Licensed under the Apache License, Version 2.0 AND the MIT License.
+  License text: qudo-pqc-lib/LICENSE
+
+  qudo-pqc-lib vendors the following third-party code:
+
+  mlkem-native (https://github.com/pq-code-package/mlkem-native, 183f2809)
+    Copyright (c) The mlkem-native project authors
+    Copyright (c) 2020 Dougall Johnson
+    Copyright (c) 2022 Arm Limited
+    (and the copyright holders indicated at the top of each source file)
+    Licensed under your choice of Apache-2.0 OR ISC OR MIT.
+    License text: qudo-pqc-lib/qudo-mlkem/mlkem-native/LICENSE
+
+  mldsa-native (https://github.com/pq-code-package/mldsa-native, 93a4fc74)
+    Copyright (c) The mldsa-native project authors
+    Copyright (c) The mlkem-native project authors
+    Copyright (c) 2020 Dougall Johnson
+    Copyright (c) 2022 Arm Limited
+    (and the copyright holders indicated at the top of each source file)
+    Licensed under your choice of Apache-2.0 OR ISC OR MIT.
+    License text: qudo-pqc-lib/qudo-mldsa/mldsa-native/LICENSE
+
+  slhdsa-native (slhdsa-c)
+    Copyright (c) The slhdsa-c project authors
+    (originally written by Markku-Juhani O. Saarinen)
+    Licensed under your choice of Apache-2.0 OR ISC OR MIT.
+    License text: qudo-pqc-lib/qudo-slhdsa/slhdsa-native/LICENSE
+
+  Keccak-1600 x86-64 assembly
+    (qudo-pqc-lib/qudo-slhdsa/slhdsa-native/keccak1600-x86_64*.s)
+    Copyright 2017-2024 The OpenSSL Project Authors
+    Generated from OpenSSL crypto/sha/asm/keccak1600-x86_64.pl (CRYPTOGAMS).
+    Licensed under the Apache License, Version 2.0.
+
+  SHA-256 SHA-NI code (qudo-pqc-lib/qudo-slhdsa/slhdsa-native/sha2_256_shani.c)
+    Derived from the public-domain noloader/SHA-Intrinsics reference.
+
+================================================================================
+
+The mlkem-native and mldsa-native libraries incorporate work derived from the
+CRYSTALS-Kyber and CRYSTALS-Dilithium reference implementations and related
+formally-verified sources; per-file headers identify the specific copyright
+holders and their license terms. Retain this NOTICE file and the referenced
+LICENSE files with any redistribution of QudoSSL, in source or binary form.

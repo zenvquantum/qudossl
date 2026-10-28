@@ -1,0 +1,8 @@
+@PACKAGE_INIT@
+
+# qudo-pqc has no external dependencies.
+# Internal AES-256-CTR-DRBG and HMAC-SHA-256 are used for all builds.
+
+include("${CMAKE_CURRENT_LIST_DIR}/qudo-pqc-targets.cmake")
+
+check_required_components(qudo-pqc)

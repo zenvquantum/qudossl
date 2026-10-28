@@ -1,0 +1,50 @@
+# Qudo PQC — OpenSSL coding style
+# Based on: https://www.openssl.org/policies/technical/coding-style.html
+
+BasedOnStyle: LLVM
+
+# Chapter 1: Indentation
+UseTab: Never
+IndentWidth: 4
+IndentPPDirectives: AfterHash
+
+# Chapter 2: Breaking long lines
+AllowShortBlocksOnASingleLine: Never
+AllowShortCaseLabelsOnASingleLine: false
+AllowShortEnumsOnASingleLine: false
+AllowShortFunctionsOnASingleLine: None
+AllowShortIfStatementsOnASingleLine: Never
+AllowShortLoopsOnASingleLine: false
+AlwaysBreakAfterReturnType: None
+AllowAllParametersOfDeclarationOnNextLine: false
+ColumnLimit: 80
+AlignAfterOpenBracket: Align
+AlignOperands: Align
+BreakBeforeBinaryOperators: true
+BreakStringLiterals: false
+
+# Chapter 3: Braces and Spaces
+SpaceBeforeAssignmentOperators: true
+IndentCaseLabels: false
+BreakBeforeBraces: Custom
+BraceWrapping:
+  AfterClass: false
+  AfterControlStatement: Never
+  AfterEnum: false
+  AfterFunction: true
+  AfterNamespace: false
+  AfterStruct: false
+  AfterUnion: false
+  BeforeCatch: false
+  BeforeElse: false
+  BeforeWhile: false
+
+# Chapter 3.1: Pointer alignment
+PointerAlignment: Right
+
+# Chapter 9: Macros
+AlignConsecutiveMacros: AcrossComments
+AlignEscapedNewlines: Left
+
+# Sort includes
+SortIncludes: CaseInsensitive

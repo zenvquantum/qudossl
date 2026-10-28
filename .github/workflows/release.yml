@@ -1,0 +1,57 @@
+# Release — build, verify and publish the QudoSSL Community source tarball.
+#
+# Triggered by pushing an annotated tag `qudossl-X.Y.Z` (or manually,
+# which produces a snapshot without publishing a release). The tarball is cut
+# from git HEAD and verified end-to-end from the unpacked archive — both build
+# stages, install, the delegation check and a post-quantum handshake — before
+# anything is published.
+#
+# The version comes from QUDO_PRODUCT_VERSION in build/qudossl, and `make dist`
+# refuses to build if HEAD's tag disagrees with it.
+name: Release
+
+on:
+  push:
+    tags: ['qudossl-*']
+  workflow_dispatch:
+
+jobs:
+  release:
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Install build dependencies
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y --no-install-recommends cmake ninja-build perl
+
+      - name: Build the source tarball (from git HEAD)
+        run: make -C build dist
+
+      - name: Verify the tarball end-to-end (the release gate)
+        run: make -C build dist-verify
+
+      - name: Publish GitHub Release (tag builds only)
+        if: startsWith(github.ref, 'refs/tags/qudossl-')
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release create "$GITHUB_REF_NAME" \
+            dist/*-src.tar.gz dist/*-src.tar.gz.sha256 \
+            --verify-tag \
+            --title "$GITHUB_REF_NAME" \
+            --notes "QudoSSL Community source distribution. Verify: \`shasum -a 256 -c $GITHUB_REF_NAME-src.tar.gz.sha256\`. Build (standard build): \`tar xf $GITHUB_REF_NAME-src.tar.gz && make -C $GITHUB_REF_NAME/build all FIPS=no PREFIX=/opt/qudossl OPENSSL_EXTRA_FLAGS=-Wl,-rpath,/opt/qudossl/lib\`. See the README for install and verify steps."
+
+      - name: Keep the snapshot tarball as a workflow artifact (manual runs)
+        if: ${{ !startsWith(github.ref, 'refs/tags/') }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: snapshot-tarball
+          path: |
+            dist/*-src.tar.gz
+            dist/*-src.tar.gz.sha256

@@ -1,0 +1,6 @@
+# qudo-mlkem Config Package
+@PACKAGE_INIT@
+
+include("${CMAKE_CURRENT_LIST_DIR}/qudo-mlkem-targets.cmake")
+
+check_required_components(qudo-mlkem)

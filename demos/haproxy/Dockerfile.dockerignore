@@ -1,0 +1,13 @@
+# The build context is the repository root; send only what the build needs.
+.git
+**/*.o
+**/*.a
+**/*.so
+**/*.so.*
+**/*.dylib
+build/out
+dist
+benchmark
+openssl/configdata.pm
+openssl/Makefile
+openssl/providers/fipsmodule.cnf

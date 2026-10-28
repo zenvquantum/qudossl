@@ -1,0 +1,27 @@
+{
+  "bomFormat": "CycloneDX",
+  "specVersion": "1.5",
+  "version": 1,
+  "metadata": {
+    "component": {
+      "type": "application",
+      "name": "grype-cpe-matcher-selftest",
+      "version": "1"
+    },
+    "properties": [
+      {
+        "name": "note",
+        "value": "Not a product component. A known-vulnerable OpenSSL version used by the security-scan workflow to confirm that Grype's CPE matcher reports matches; the workflow fails if this scan finds no CVEs."
+      }
+    ]
+  },
+  "components": [
+    {
+      "type": "library",
+      "bom-ref": "openssl-3.0.0-canary",
+      "name": "openssl",
+      "version": "3.0.0",
+      "cpe": "cpe:2.3:a:openssl:openssl:3.0.0:*:*:*:*:*:*:*"
+    }
+  ]
+}

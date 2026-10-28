@@ -1,0 +1,35 @@
+# macOS
+.DS_Store
+
+# Build outputs
+/build/out/
+*.o
+*.a
+*.so
+*.so.*
+*.dylib
+*.dll
+*.lib
+*.exe
+
+# CMake sub-build of qudo-pqc-lib
+/qudo-pqc-lib/build/
+
+# OpenSSL in-tree build artifacts
+/openssl/Makefile
+/openssl/configdata.pm
+/openssl/*.pc
+/openssl/apps/openssl
+/openssl/providers/*.so
+/openssl/providers/fipsmodule.cnf
+
+# Editor / IDE
+.vscode/
+.idea/
+*.swp
+
+# Local overrides
+.env
+local.mk
+
+dist/

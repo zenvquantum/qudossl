@@ -1,0 +1,31 @@
+# Pinned toolchain for reproducible QudoSSL builds.
+#
+# Re-run verify-reproducible.sh after changing the base image.
+#
+#   docker build -f reproducible-build/Dockerfile.reproducible -t qudossl-repro .
+#   docker run --rm -v "$PWD:/src" -w /src qudossl-repro make -C build repro-check
+
+FROM debian:bookworm-20250630-slim
+
+ENV DEBIAN_FRONTEND=noninteractive \
+    SOURCE_DATE_EPOCH=1752451200 \
+    LC_ALL=C \
+    TZ=UTC
+
+RUN apt-get update && apt-get install -y --no-install-recommends \
+        build-essential=12.9 \
+        cmake \
+        perl \
+        git \
+        ca-certificates \
+        python3 \
+        binutils \
+    && rm -rf /var/lib/apt/lists/*
+
+# Deterministic archives: no timestamps, no uid/gid, sorted members.
+ENV ARFLAGS=Dv \
+    CFLAGS="-ffile-prefix-map=/src=." \
+    LDFLAGS="-Wl,--build-id=none"
+
+WORKDIR /src
+CMD ["make", "-C", "build", "all"]

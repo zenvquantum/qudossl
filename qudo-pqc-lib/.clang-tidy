@@ -1,0 +1,36 @@
+---
+# Qudo PQC — clang-tidy configuration
+# Focused on security, crypto safety, and C99 correctness
+
+Checks: >
+  -*,
+  bugprone-*,
+  cert-*,
+  clang-analyzer-security.*,
+  clang-analyzer-core.*,
+  clang-analyzer-nullability.*,
+  clang-analyzer-unix.*,
+  misc-redundant-expression,
+  misc-unused-using-decls,
+  performance-*,
+  portability-*,
+  -bugprone-easily-swappable-parameters,
+  -bugprone-reserved-identifier,
+  -cert-dcl37-c,
+  -cert-dcl51-cpp
+
+# Crypto-critical checks enabled above:
+# - cert-msc30-c: flags rand() usage
+# - cert-msc32-c: flags improper RNG seeding
+# - clang-analyzer-security.*: buffer overflow, insecure API
+# - bugprone-sizeof-expression: catch buffer size errors
+
+WarningsAsErrors: >
+  cert-msc30-c,
+  clang-analyzer-security.insecureAPI.*
+
+HeaderFilterRegex: '(qudo-mlkem|qudo-mldsa|qudo-slhdsa)/include/.*\.h$'
+
+# HeaderFilterRegex already excludes vendored *-native headers. The explicit
+# exclusion below requires clang-tidy >= 19.
+# ExcludeHeaderFilterRegex: '(mlkem-native|mldsa-native|slhdsa-native)/.*'

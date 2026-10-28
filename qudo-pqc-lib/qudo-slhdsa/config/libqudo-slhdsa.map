@@ -1,0 +1,138 @@
+QUDO_SLHDSA_1.0 {
+    global:
+        /* Object API */
+        QUDO_SLHDSA_new;
+        QUDO_SLHDSA_free;
+        QUDO_SLHDSA_keypair;
+        QUDO_SLHDSA_keypair_internal;
+        QUDO_SLHDSA_sign;
+        QUDO_SLHDSA_sign_with_ctx_str;
+        QUDO_SLHDSA_verify;
+        QUDO_SLHDSA_verify_with_ctx_str;
+
+        /* Direct API - SHA2-128s */
+        QUDO_SLHDSA_SHA2_128s_keypair;
+        QUDO_SLHDSA_SHA2_128s_sign;
+        QUDO_SLHDSA_SHA2_128s_verify;
+
+        /* Direct API - SHA2-128f */
+        QUDO_SLHDSA_SHA2_128f_keypair;
+        QUDO_SLHDSA_SHA2_128f_sign;
+        QUDO_SLHDSA_SHA2_128f_verify;
+
+        /* Direct API - SHA2-192s */
+        QUDO_SLHDSA_SHA2_192s_keypair;
+        QUDO_SLHDSA_SHA2_192s_sign;
+        QUDO_SLHDSA_SHA2_192s_verify;
+
+        /* Direct API - SHA2-192f */
+        QUDO_SLHDSA_SHA2_192f_keypair;
+        QUDO_SLHDSA_SHA2_192f_sign;
+        QUDO_SLHDSA_SHA2_192f_verify;
+
+        /* Direct API - SHA2-256s */
+        QUDO_SLHDSA_SHA2_256s_keypair;
+        QUDO_SLHDSA_SHA2_256s_sign;
+        QUDO_SLHDSA_SHA2_256s_verify;
+
+        /* Direct API - SHA2-256f */
+        QUDO_SLHDSA_SHA2_256f_keypair;
+        QUDO_SLHDSA_SHA2_256f_sign;
+        QUDO_SLHDSA_SHA2_256f_verify;
+
+        /* Direct API - SHAKE-128s */
+        QUDO_SLHDSA_SHAKE_128s_keypair;
+        QUDO_SLHDSA_SHAKE_128s_sign;
+        QUDO_SLHDSA_SHAKE_128s_verify;
+
+        /* Direct API - SHAKE-128f */
+        QUDO_SLHDSA_SHAKE_128f_keypair;
+        QUDO_SLHDSA_SHAKE_128f_sign;
+        QUDO_SLHDSA_SHAKE_128f_verify;
+
+        /* Direct API - SHAKE-192s */
+        QUDO_SLHDSA_SHAKE_192s_keypair;
+        QUDO_SLHDSA_SHAKE_192s_sign;
+        QUDO_SLHDSA_SHAKE_192s_verify;
+
+        /* Direct API - SHAKE-192f */
+        QUDO_SLHDSA_SHAKE_192f_keypair;
+        QUDO_SLHDSA_SHAKE_192f_sign;
+        QUDO_SLHDSA_SHAKE_192f_verify;
+
+        /* Direct API - SHAKE-256s */
+        QUDO_SLHDSA_SHAKE_256s_keypair;
+        QUDO_SLHDSA_SHAKE_256s_sign;
+        QUDO_SLHDSA_SHAKE_256s_verify;
+
+        /* Direct API - SHAKE-256f */
+        QUDO_SLHDSA_SHAKE_256f_keypair;
+        QUDO_SLHDSA_SHAKE_256f_sign;
+        QUDO_SLHDSA_SHAKE_256f_verify;
+
+        /* DER/PEM serialization */
+        QUDO_SLHDSA_export_public_key_der;
+        QUDO_SLHDSA_import_public_key_der;
+        QUDO_SLHDSA_export_private_key_der;
+        QUDO_SLHDSA_import_private_key_der;
+        QUDO_SLHDSA_export_public_key_pem;
+        QUDO_SLHDSA_import_public_key_pem;
+        QUDO_SLHDSA_export_private_key_pem;
+        QUDO_SLHDSA_import_private_key_pem;
+
+        /* Config helper functions */
+        slhdsa_get_algorithm_name;
+        slhdsa_get_public_key_bytes;
+        slhdsa_get_secret_key_bytes;
+        slhdsa_get_signature_bytes;
+        slhdsa_get_nist_level;
+        slhdsa_get_parameter_set;
+
+        /* Library lifecycle */
+        QUDO_SLHDSA_init;
+        QUDO_SLHDSA_cleanup;
+        QUDO_SLHDSA_is_initialized;
+
+        /* Utility functions */
+        QUDO_SLHDSA_get_version;
+        QUDO_SLHDSA_get_platform;
+        QUDO_SLHDSA_get_architecture;
+        QUDO_SLHDSA_has_avx2;
+        QUDO_SLHDSA_has_neon;
+        QUDO_SLHDSA_get_cpu_count;
+        QUDO_SLHDSA_get_features;
+        QUDO_SLHDSA_print_system_info;
+        QUDO_SLHDSA_is_platform_supported;
+        QUDO_SLHDSA_get_cache_line_size;
+        QUDO_SLHDSA_get_error_string;
+        QUDO_SLHDSA_get_security_level;
+
+        /* Algorithm enumeration */
+        QUDO_SLHDSA_alg_count;
+        QUDO_SLHDSA_alg_identifier;
+        QUDO_SLHDSA_alg_is_enabled;
+
+        /* Secure memory */
+        QUDO_SLHDSA_secure_zero;
+        QUDO_SLHDSA_secure_alloc;
+        QUDO_SLHDSA_secure_free;
+        QUDO_SLHDSA_constant_time_compare;
+        QUDO_SLHDSA_aligned_alloc;
+        QUDO_SLHDSA_aligned_free;
+
+        /* Random number generation */
+        QUDO_SLHDSA_randombytes_init;
+        QUDO_SLHDSA_randombytes;
+        QUDO_SLHDSA_randombytes_cleanup;
+        QUDO_SLHDSA_randombytes_test;
+
+        /* Configuration */
+        QUDO_SLHDSA_config_default;
+        QUDO_SLHDSA_config_load;
+        QUDO_SLHDSA_config_save;
+        QUDO_SLHDSA_config_free;
+        QUDO_SLHDSA_config_validate;
+        QUDO_SLHDSA_config_apply;
+    local:
+        *;
+};

@@ -1,0 +1,6 @@
+# qudo-mldsa Config Package
+@PACKAGE_INIT@
+
+include("${CMAKE_CURRENT_LIST_DIR}/qudo-mldsa-targets.cmake")
+
+check_required_components(qudo-mldsa)

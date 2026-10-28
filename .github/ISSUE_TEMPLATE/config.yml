@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Report a security vulnerability
+    url: https://github.com/zenvquantum/qudossl/blob/main/SECURITY.md
+    about: Please do not report vulnerabilities in public issues.
+  - name: Commercial support
+    url: https://zenv.ai/qudo
+    about: Support SLAs, deployment help and indemnity from ZenV Quantum.

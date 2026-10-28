@@ -1,0 +1,8 @@
+services:
+  haproxy:
+    build:
+      context: ../..
+      dockerfile: demos/haproxy/Dockerfile
+    image: qudossl-haproxy-demo
+    ports:
+      - "9443:9443"

@@ -1,0 +1,8 @@
+services:
+  nginx:
+    build:
+      context: ../..
+      dockerfile: demos/nginx/Dockerfile
+    image: qudossl-nginx-demo
+    ports:
+      - "8443:8443"

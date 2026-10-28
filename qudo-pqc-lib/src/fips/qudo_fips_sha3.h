@@ -1,0 +1,16 @@
+// SPDX-License-Identifier: Apache-2.0 AND MIT
+
+#ifndef QUDO_FIPS_SHA3_H
+#define QUDO_FIPS_SHA3_H
+
+#include "sha3_api.h"
+
+#define QUDO_SHA3_224_DIGEST_SIZE 28
+#define QUDO_SHA3_256_DIGEST_SIZE 32
+#define QUDO_SHA3_384_DIGEST_SIZE 48
+#define QUDO_SHA3_512_DIGEST_SIZE 64
+
+#define QUDO_SHAKE128_RATE 16
+#define QUDO_SHAKE256_RATE 32
+
+#endif

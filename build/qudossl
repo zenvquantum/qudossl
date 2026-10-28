@@ -1,0 +1,56 @@
+#!/usr/bin/env bash
+#
+# qudossl — the QudoSSL CLI.
+#
+# Runs the OpenSSL command-line app built by QudoSSL with all arguments passed
+# through unchanged, and prints a QudoSSL banner on `version` and on a bare
+# invocation. `openssl version` output is not affected.
+#
+set -euo pipefail
+
+# Resolve the QudoSSL openssl binary. There is no fallback to a system openssl.
+self_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+openssl_bin=""
+for c in "${self_dir}/openssl" "${self_dir}/../bin/openssl"; do
+    if [ -x "$c" ] && [ ! -L "$c" -o "$(basename "$(readlink "$c")")" != "qudossl" ]; then
+        openssl_bin="$c"; break
+    fi
+done
+
+if [ -z "$openssl_bin" ]; then
+    echo "qudossl: cannot find the QudoSSL openssl binary next to $self_dir" >&2
+    echo "qudossl: a system openssl is not used as a fallback." >&2
+    exit 1
+fi
+
+# QUDO_PRODUCT_VERSION tracks BUILD_METADATA in openssl/VERSION.dat.
+QUDO_PRODUCT_VERSION="1.0.0"
+
+banner() {
+    local base
+    base="$("$openssl_bin" version 2>/dev/null | awk '{print $2}')"
+    cat <<EOF
+QudoSSL ${QUDO_PRODUCT_VERSION} (OpenSSL ${base} base)
+Copyright (c) ZenV Quantum. Apache License 2.0.
+Post-quantum TLS 1.3: ML-KEM (FIPS 203) hybrid key exchange.
+FIPS module: QudoSSL FIPS Provider
+EOF
+}
+
+if [ $# -eq 0 ]; then
+    banner
+    exec "$openssl_bin"
+fi
+
+# A bare version query prints the product version only. Anything more specific
+# (e.g. `qudossl version -a`) goes to openssl for the full build details.
+if [ $# -eq 1 ]; then
+    case "$1" in
+        version|-version|--version|-v)
+            echo "QudoSSL ${QUDO_PRODUCT_VERSION}"
+            exit 0
+            ;;
+    esac
+fi
+
+exec "$openssl_bin" "$@"

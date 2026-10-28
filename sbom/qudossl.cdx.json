@@ -1,0 +1,66 @@
+{
+  "bomFormat": "CycloneDX",
+  "specVersion": "1.5",
+  "version": 1,
+  "metadata": {
+    "component": {
+      "type": "application",
+      "name": "qudossl",
+      "version": "1.0.0",
+      "description": "OpenSSL 3.5.7 with ML-KEM/ML-DSA delegated to qudo-pqc-lib."
+    },
+    "properties": [
+      {
+        "name": "note",
+        "value": "Version-pinned bill of materials for the QudoSSL product (fips.so, libcrypto, libssl), used for CPE-based CVE matching of the vendored source components. The OpenSSL version and CPE correspond to openssl/VERSION.dat; the qudo-pqc-lib entry corresponds to docs/vendored-versions.md."
+      }
+    ]
+  },
+  "components": [
+    {
+      "type": "library",
+      "bom-ref": "openssl-3.5.7",
+      "name": "openssl",
+      "version": "3.5.7",
+      "cpe": "cpe:2.3:a:openssl:openssl:3.5.7:*:*:*:*:*:*:*",
+      "licenses": [ { "license": { "id": "Apache-2.0" } } ],
+      "externalReferences": [
+        { "type": "vcs", "url": "https://github.com/openssl/openssl" },
+        { "type": "distribution", "comment": "pinned tag", "url": "https://github.com/openssl/openssl/tree/openssl-3.5.7" }
+      ]
+    },
+    {
+      "type": "library",
+      "bom-ref": "qudo-pqc-lib",
+      "name": "qudo-pqc-lib",
+      "version": "1.0.0",
+      "purl": "pkg:generic/qudo-pqc-lib@1.0.0",
+      "licenses": [ { "expression": "Apache-2.0 AND MIT" } ]
+    },
+    {
+      "type": "library",
+      "bom-ref": "mlkem-native",
+      "name": "mlkem-native",
+      "version": "183f2809",
+      "purl": "pkg:github/pq-code-package/mlkem-native@183f2809",
+      "licenses": [ { "expression": "Apache-2.0 OR ISC OR MIT" } ]
+    },
+    {
+      "type": "library",
+      "bom-ref": "mldsa-native",
+      "name": "mldsa-native",
+      "version": "93a4fc74",
+      "purl": "pkg:github/pq-code-package/mldsa-native@93a4fc74",
+      "licenses": [ { "expression": "Apache-2.0 OR ISC OR MIT" } ]
+    },
+    {
+      "type": "library",
+      "bom-ref": "slhdsa-native",
+      "name": "slhdsa-native",
+      "version": "vendored",
+      "purl": "pkg:generic/slhdsa-native@vendored",
+      "description": "Only its SHA-2, SHA-3 and Keccak code is linked; SLH-DSA itself is served by OpenSSL.",
+      "licenses": [ { "expression": "Apache-2.0 OR ISC OR MIT" } ]
+    }
+  ]
+}

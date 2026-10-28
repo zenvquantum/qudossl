@@ -1,0 +1,146 @@
+QUDO_MLDSA_1.0 {
+    global:
+        /* Object API */
+        QUDO_MLDSA_new;
+        QUDO_MLDSA_free;
+        QUDO_MLDSA_init;
+        QUDO_MLDSA_cleanup;
+        QUDO_MLDSA_is_initialized;
+        QUDO_MLDSA_keypair;
+        QUDO_MLDSA_sign;
+        QUDO_MLDSA_sign_with_context;
+        QUDO_MLDSA_verify;
+        QUDO_MLDSA_verify_with_context;
+
+        /* Advanced Object API */
+        QUDO_MLDSA_keypair_internal;
+        QUDO_MLDSA_sign_internal;
+        QUDO_MLDSA_sign_extmu;
+        QUDO_MLDSA_sign_concat;
+        QUDO_MLDSA_verify_internal;
+        QUDO_MLDSA_verify_extmu;
+        QUDO_MLDSA_open;
+        QUDO_MLDSA_sign_pre_hash_internal;
+        QUDO_MLDSA_verify_pre_hash_internal;
+
+        /* Direct API - ML-DSA-44 */
+        QUDO_MLDSA_ML_DSA_44_keypair;
+        QUDO_MLDSA_ML_DSA_44_sign;
+        QUDO_MLDSA_ML_DSA_44_verify;
+        QUDO_MLDSA_ML_DSA_44_keypair_internal;
+        QUDO_MLDSA_ML_DSA_44_sign_internal;
+        QUDO_MLDSA_ML_DSA_44_sign_extmu;
+        QUDO_MLDSA_ML_DSA_44_sign_concat;
+        QUDO_MLDSA_ML_DSA_44_verify_internal;
+        QUDO_MLDSA_ML_DSA_44_verify_extmu;
+        QUDO_MLDSA_ML_DSA_44_open;
+        QUDO_MLDSA_ML_DSA_44_sign_pre_hash;
+        QUDO_MLDSA_ML_DSA_44_verify_pre_hash;
+
+        /* Direct API - ML-DSA-65 */
+        QUDO_MLDSA_ML_DSA_65_keypair;
+        QUDO_MLDSA_ML_DSA_65_sign;
+        QUDO_MLDSA_ML_DSA_65_verify;
+        QUDO_MLDSA_ML_DSA_65_keypair_internal;
+        QUDO_MLDSA_ML_DSA_65_sign_internal;
+        QUDO_MLDSA_ML_DSA_65_sign_extmu;
+        QUDO_MLDSA_ML_DSA_65_sign_concat;
+        QUDO_MLDSA_ML_DSA_65_verify_internal;
+        QUDO_MLDSA_ML_DSA_65_verify_extmu;
+        QUDO_MLDSA_ML_DSA_65_open;
+        QUDO_MLDSA_ML_DSA_65_sign_pre_hash;
+        QUDO_MLDSA_ML_DSA_65_verify_pre_hash;
+
+        /* Direct API - ML-DSA-87 */
+        QUDO_MLDSA_ML_DSA_87_keypair;
+        QUDO_MLDSA_ML_DSA_87_sign;
+        QUDO_MLDSA_ML_DSA_87_verify;
+        QUDO_MLDSA_ML_DSA_87_keypair_internal;
+        QUDO_MLDSA_ML_DSA_87_sign_internal;
+        QUDO_MLDSA_ML_DSA_87_sign_extmu;
+        QUDO_MLDSA_ML_DSA_87_sign_concat;
+        QUDO_MLDSA_ML_DSA_87_verify_internal;
+        QUDO_MLDSA_ML_DSA_87_verify_extmu;
+        QUDO_MLDSA_ML_DSA_87_open;
+        QUDO_MLDSA_ML_DSA_87_sign_pre_hash;
+        QUDO_MLDSA_ML_DSA_87_verify_pre_hash;
+
+        /* Utility functions */
+        QUDO_MLDSA_get_public_key_bytes;
+        QUDO_MLDSA_get_secret_key_bytes;
+        QUDO_MLDSA_get_signature_bytes;
+        QUDO_MLDSA_get_algorithm_name;
+        QUDO_MLDSA_get_security_level;
+        QUDO_MLDSA_get_error_string;
+        QUDO_MLDSA_get_version;
+        QUDO_MLDSA_get_platform;
+        QUDO_MLDSA_get_architecture;
+        QUDO_MLDSA_has_avx2;
+        QUDO_MLDSA_has_neon;
+        QUDO_MLDSA_get_cpu_count;
+        QUDO_MLDSA_get_features;
+        QUDO_MLDSA_print_system_info;
+        QUDO_MLDSA_is_platform_supported;
+        QUDO_MLDSA_get_cache_line_size;
+
+        /* DER/PEM serialization */
+        QUDO_MLDSA_export_public_key_der;
+        QUDO_MLDSA_import_public_key_der;
+        QUDO_MLDSA_export_public_key_pem;
+        QUDO_MLDSA_import_public_key_pem;
+        QUDO_MLDSA_export_private_key_der;
+        QUDO_MLDSA_import_private_key_der;
+        QUDO_MLDSA_export_private_key_pem;
+        QUDO_MLDSA_import_private_key_pem;
+        QUDO_MLDSA_export_private_key_der_format;
+        QUDO_MLDSA_import_private_key_der_format;
+        QUDO_MLDSA_export_private_key_pem_format;
+        QUDO_MLDSA_import_private_key_pem_format;
+
+        /* Algorithm enumeration */
+        QUDO_MLDSA_alg_count;
+        QUDO_MLDSA_alg_identifier;
+        QUDO_MLDSA_alg_is_enabled;
+        QUDO_MLDSA_supports_ctx_str;
+
+        /* Version and error handling */
+        QUDO_MLDSA_api_version;
+        QUDO_MLDSA_version_major;
+        QUDO_MLDSA_version_minor;
+        QUDO_MLDSA_version_patch;
+        QUDO_MLDSA_get_last_error;
+        QUDO_MLDSA_error_string;
+        QUDO_MLDSA_clear_error;
+
+        /* Secure memory */
+        QUDO_MLDSA_secure_zero;
+        QUDO_MLDSA_secure_alloc;
+        QUDO_MLDSA_secure_free;
+        QUDO_MLDSA_constant_time_compare;
+        QUDO_MLDSA_aligned_alloc;
+        QUDO_MLDSA_aligned_free;
+
+        /* Random number generation */
+        QUDO_MLDSA_randombytes_init;
+        QUDO_MLDSA_randombytes;
+        QUDO_MLDSA_randombytes_cleanup;
+        QUDO_MLDSA_randombytes_test;
+
+        /* Configuration */
+        QUDO_MLDSA_config_default;
+        QUDO_MLDSA_config_load;
+        QUDO_MLDSA_config_save;
+        QUDO_MLDSA_config_free;
+        QUDO_MLDSA_config_validate;
+        QUDO_MLDSA_config_apply;
+
+        /* Config helper functions */
+        mldsa_get_default_config;
+        mldsa_get_version;
+        mldsa_get_algorithm_name;
+        mldsa_get_public_key_bytes;
+        mldsa_get_secret_key_bytes;
+        mldsa_get_signature_bytes;
+    local:
+        *;
+};
